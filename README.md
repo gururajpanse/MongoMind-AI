@@ -254,12 +254,6 @@ This executes predefined queries and prints the agent's reasoning and final answ
 
 ---
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
 <p align="center">
   Built with 🍃 MongoDB Atlas &nbsp;·&nbsp; 🦜 LangGraph &nbsp;·&nbsp; ⚡ Groq &nbsp;·&nbsp; 🚀 VoyageAI
 </p>

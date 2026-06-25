@@ -254,6 +254,7 @@ This executes predefined queries and prints the agent's reasoning and final answ
 ## 🏫 Acknowledgements
 
 This project was built and developed as part of the **Building AI Agents with MongoDB** certification program by MongoDB.
+
 ---
 
 <p align="center">

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MongoMind AI — AI Agents Powered by MongoDB Vector Search</title>
+  <meta name="description" content="MongoMind AI is an intelligent AI agent powered by MongoDB Atlas Vector Search, LangGraph, RAG pipelines, VoyageAI embeddings, and Groq LLM." />
+  <meta name="keywords" content="MongoDB, AI Agent, Vector Search, LangChain, LangGraph, RAG, VoyageAI, Groq" />
+  <meta property="og:title" content="MongoMind AI" />
+  <meta property="og:description" content="AI Agents Powered by MongoDB Vector Search" />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      corePlugins: { preflight: false },  /* Avoid conflict with Bootstrap reset */
+      theme: {
+        extend: {
+          colors: {
+            green: { DEFAULT: '#00ED64', dark: '#00b341' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-container">
+    <!-- Logo -->
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">M</div>
+      <span class="nav-logo-text">Mongo<span>Mind</span> AI</span>
+    </a>
+
+    <!-- Links -->
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#chat">Chat</a></li>
+      <li><a href="#workflow">Workflow</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#tech">Tech Stack</a></li>
+      <li><a href="#chat" class="nav-cta">Try the Agent</a></li>
+    </ul>
+
+    <!-- Mobile Toggle -->
+    <div class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     HERO SECTION
+════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <!-- Animated background grid -->
+  <div class="hero-grid"></div>
+
+  <!-- Floating glow orbs -->
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+
+  <!-- Hero content -->
+  <div class="hero-content">
+    <!-- Badge -->
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Powered by MongoDB Atlas &amp; LangGraph
+    </div>
+
+    <!-- Main Heading -->
+    <h1 class="hero-title">
+      AI Agents Powered by<br />
+      <span class="gradient-text">MongoDB Vector Search</span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="hero-subtitle">
+      MongoMind AI is a full-stack intelligent agent that uses RAG pipelines,
+      VoyageAI embeddings, and Groq LLM to answer questions grounded in
+      real MongoDB documentation — with persistent memory via LangGraph.
+    </p>
+
+    <!-- CTA Buttons -->
+    <div class="hero-ctas">
+      <button class="btn-primary-green" onclick="scrollToChat()" id="hero-cta-primary">
+        <i class="fas fa-robot"></i>
+        Try the AI Agent
+      </button>
+      <a href="https://github.com" target="_blank" class="btn-ghost" id="hero-cta-github">
+        <i class="fab fa-github"></i>
+        View on GitHub
+      </a>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">512</div>
+        <div class="hero-stat-label">Embedding Dims</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">150</div>
+        <div class="hero-stat-label">Vector Candidates</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">5</div>
+        <div class="hero-stat-label">Retrieved Chunks</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">∞</div>
+        <div class="hero-stat-label">Memory Sessions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- ════════════════════════════════════════════════════════════
+     CHAT INTERFACE
+════════════════════════════════════════════════════════════ -->
+<section id="chat">
+  <div id="chat-section">
+    <div class="chat-wrapper">
+
+      <!-- Section header -->
+      <div class="text-center mb-4 reveal">
+        <span class="section-label">🤖 Live AI Agent</span>
+        <h2 class="section-heading">Ask MongoMind Anything</h2>
+        <p class="section-sub">
+          Chat with an AI agent that retrieves grounded answers from MongoDB documentation
+          using vector search and RAG pipelines.
+        </p>
+      </div>
+
+      <!-- Status bar -->
+      <div class="chat-status-bar reveal">
+        <div class="chat-status-indicator">
+          <div class="status-dot offline" id="statusDot"></div>
+          <span id="statusText">Checking agent status...</span>
+          <span style="color: var(--text-muted); font-size: 0.75rem;">
+            &nbsp;· Session: <span id="threadId" style="font-family:monospace; color: var(--green);"></span>
+          </span>
+        </div>
+        <div class="chat-actions">
+          <button class="chat-action-btn" onclick="checkHealth()" id="refreshBtn">
+            <i class="fas fa-circle-notch"></i> Refresh
+          </button>
+          <button class="chat-action-btn" onclick="clearChat()" id="clearBtn">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Sample prompts -->
+      <div class="sample-prompts reveal">
+        <button class="sample-prompt-btn" onclick="useSamplePrompt('What are best practices for data backups in MongoDB?')" id="prompt-1">
+          💾 MongoDB Backup Best Practices
+        </button>
+        <button class="sample-prompt-btn" onclick="useSamplePrompt('How does vector search work in MongoDB Atlas?')" id="prompt-2">
+          🔍 How Vector Search Works
+        </button>
+        <button class="sample-prompt-btn" onclick="useSamplePrompt('Explain the LangGraph workflow in this project.')" id="prompt-3">
+          🔄 LangGraph Workflow
+        </button>
+        <button class="sample-prompt-btn" onclick="useSamplePrompt('What MongoDB collections are used in this project?')" id="prompt-4">
+          🍃 MongoDB Collections
+        </button>
+      </div>
+
+      <!-- Chat window -->
+      <div class="chat-window reveal">
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <!-- Input area -->
+        <div class="chat-input-area">
+          <div class="chat-input-row">
+            <textarea
+              id="chatInput"
+              class="chat-input"
+              placeholder="Ask about MongoDB, vector search, RAG pipelines..."
+              rows="1"
+              autocomplete="off"
+              aria-label="Chat input"
+            ></textarea>
+            <button id="sendBtn" class="chat-send-btn" onclick="sendMessage()" aria-label="Send message">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="chat-footer-note">
+            Press <kbd style="background:rgba(255,255,255,0.08);border-radius:4px;padding:1px 5px;font-size:0.73rem;">Enter</kbd> to send
+            &nbsp;·&nbsp; <kbd style="background:rgba(255,255,255,0.08);border-radius:4px;padding:1px 5px;font-size:0.73rem;">Shift+Enter</kbd> for new line
+            &nbsp;·&nbsp; Answers grounded in MongoDB documentation via RAG
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- ════════════════════════════════════════════════════════════
+     WORKFLOW SECTION
+════════════════════════════════════════════════════════════ -->
+<section id="workflow">
+  <div id="workflow-section">
+    <div class="text-center reveal">
+      <span class="section-label">⚙️ Under the Hood</span>
+      <h2 class="section-heading">How MongoMind AI Works</h2>
+      <p class="section-sub">
+        Every query triggers a multi-step RAG pipeline — from embedding generation
+        to LLM-grounded response generation.
+      </p>
+    </div>
+
+    <div class="workflow-inner">
+      <div class="workflow-steps" id="workflowSteps">
+
+        <!-- Step 1 -->
+        <div class="workflow-step reveal">
+          <div class="workflow-step-left">
+            <div class="workflow-step-num">1</div>
+            <div class="workflow-connector"></div>
+          </div>
+          <div class="workflow-step-card">
+            <div class="workflow-step-icon">💬</div>
+            <div class="workflow-step-title">User Query</div>
+            <div class="workflow-step-desc">
+              The user submits a natural language question. The LangGraph agent receives
+              this as a message in the conversation state.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="workflow-step reveal">
+          <div class="workflow-step-left">
+            <div class="workflow-step-num">2</div>
+            <div class="workflow-connector"></div>
+          </div>
+          <div class="workflow-step-card">
+            <div class="workflow-step-icon">🧠</div>
+            <div class="workflow-step-title">Embedding Generation</div>
+            <div class="workflow-step-desc">
+              VoyageAI converts the query into a <strong>512-dimensional vector</strong>
+              using the <code style="font-family:monospace;color:#00ED64">voyage-3-lite</code> model,
+              capturing semantic meaning beyond keyword matching.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="workflow-step reveal">
+          <div class="workflow-step-left">
+            <div class="workflow-step-num">3</div>
+            <div class="workflow-connector"></div>
+          </div>
+          <div class="workflow-step-card">
+            <div class="workflow-step-icon">🔍</div>
+            <div class="workflow-step-title">MongoDB Vector Search</div>
+            <div class="workflow-step-desc">
+              Atlas Vector Search scans <strong>150 candidates</strong> in the
+              <code style="font-family:monospace;color:#00ED64">chunked_docs</code> collection
+              using cosine similarity, returning the top 5 most semantically relevant chunks.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="workflow-step reveal">
+          <div class="workflow-step-left">
+            <div class="workflow-step-num">4</div>
+            <div class="workflow-connector"></div>
+          </div>
+          <div class="workflow-step-card">
+            <div class="workflow-step-icon">📄</div>
+            <div class="workflow-step-title">Retrieved Context</div>
+            <div class="workflow-step-desc">
+              The retrieved document chunks are passed back as tool output to the agent,
+              forming the grounded context that the LLM will use to compose its answer.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="workflow-step reveal">
+          <div class="workflow-step-left">
+            <div class="workflow-step-num">5</div>
+            <!-- No connector on last step -->
+          </div>
+          <div class="workflow-step-card" style="border-color: rgba(0, 237, 100, 0.25); box-shadow: 0 0 20px rgba(0, 237, 100, 0.08);">
+            <div class="workflow-step-icon">✨</div>
+            <div class="workflow-step-title">LLM Response</div>
+            <div class="workflow-step-desc">
+              <strong>Groq + Llama 4 Scout</strong> synthesizes the retrieved context into a
+              clear, accurate answer. The response and full conversation are persisted in MongoDB
+              for multi-turn memory.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FEATURES SECTION
+════════════════════════════════════════════════════════════ -->
+<section id="features">
+  <div id="features-section">
+    <div class="text-center reveal">
+      <span class="section-label">✨ Capabilities</span>
+      <h2 class="section-heading">What Powers MongoMind AI</h2>
+      <p class="section-sub">
+        A full stack of modern AI infrastructure — from vector databases to
+        agentic reasoning frameworks.
+      </p>
+    </div>
+
+    <div class="features-grid" id="featuresGrid">
+
+      <!-- Feature 1 -->
+      <div class="feature-card reveal stagger-child">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">Agentic AI</div>
+        <div class="feature-desc">
+          LangGraph orchestrates a stateful agent that autonomously decides when to
+          retrieve information and when to respond directly — with full tool calling support.
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card reveal stagger-child">
+        <div class="feature-icon">🍃</div>
+        <div class="feature-title">MongoDB Atlas</div>
+        <div class="feature-desc">
+          Cloud-native document database stores both the full documentation corpus and
+          chunked embeddings. Also serves as the persistent memory store for LangGraph
+          conversation checkpoints.
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card reveal stagger-child">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">Vector Search</div>
+        <div class="feature-desc">
+          MongoDB Atlas Vector Search finds semantically similar documents using cosine
+          similarity across 512-dimensional VoyageAI embeddings — going far beyond
+          keyword matching.
+        </div>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card reveal stagger-child">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">VoyageAI Embeddings</div>
+        <div class="feature-desc">
+          The <code style="color:#00ED64;font-family:monospace">voyage-3-lite</code> model converts
+          natural language into dense 512-dimensional vectors that capture deep semantic meaning,
+          powering accurate retrieval.
+        </div>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="feature-card reveal stagger-child">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-title">LangGraph Workflows</div>
+        <div class="feature-desc">
+          A directed acyclic graph manages the agent loop: start → agent → tools →
+          agent → end. Conditional edges ensure tools are only called when necessary,
+          optimizing performance.
+        </div>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="feature-card reveal stagger-child">
+        <div class="feature-icon">📚</div>
+        <div class="feature-title">RAG Pipelines</div>
+        <div class="feature-desc">
+          Retrieval-Augmented Generation grounds every LLM response in real documentation.
+          The agent never hallucinates — if information isn't found, it explicitly says
+          "I DON'T KNOW".
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- ════════════════════════════════════════════════════════════
+     TECH STACK SECTION
+════════════════════════════════════════════════════════════ -->
+<section id="tech">
+  <div id="tech-section" class="section section-center">
+    <div class="reveal">
+      <span class="section-label">🛠 Tech Stack</span>
+      <h2 class="section-heading">Built With Modern AI Infrastructure</h2>
+      <p class="section-sub">
+        Every layer of the stack is purposefully chosen for performance,
+        scalability, and developer experience.
+      </p>
+    </div>
+
+    <div class="tech-grid">
+
+      <div class="tech-badge reveal" id="tech-python">
+        <div class="tech-badge-icon" style="background:#3776ab22;">🐍</div>
+        <div>
+          <div class="tech-badge-name">Python 3.12</div>
+          <div class="tech-badge-desc">Core language</div>
+        </div>
+      </div>
+
+      <div class="tech-badge reveal" id="tech-mongodb">
+        <div class="tech-badge-icon" style="background:#00ED6422;">🍃</div>
+        <div>
+          <div class="tech-badge-name">MongoDB Atlas</div>
+          <div class="tech-badge-desc">Cloud database + Vector Search</div>
+        </div>
+      </div>
+
+      <div class="tech-badge reveal" id="tech-langchain">
+        <div class="tech-badge-icon" style="background:#1c7c2022;">🦜</div>
+        <div>
+          <div class="tech-badge-name">LangChain</div>
+          <div class="tech-badge-desc">LLM tooling framework</div>
+        </div>
+      </div>
+
+      <div class="tech-badge reveal" id="tech-langgraph">
+        <div class="tech-badge-icon" style="background:#6366f122;">📊</div>
+        <div>
+          <div class="tech-badge-name">LangGraph</div>
+          <div class="tech-badge-desc">Agentic workflow orchestration</div>
+        </div>
+      </div>
+
+      <div class="tech-badge reveal" id="tech-groq">
+        <div class="tech-badge-icon" style="background:#f97316 22;">⚡</div>
+        <div>
+          <div class="tech-badge-name">Groq + Llama 4</div>
+          <div class="tech-badge-desc">Ultra-fast LLM inference</div>
+        </div>
+      </div>
+
+      <div class="tech-badge reveal" id="tech-voyage">
+        <div class="tech-badge-icon" style="background:#8b5cf622;">🚀</div>
+        <div>
+          <div class="tech-badge-name">VoyageAI</div>
+          <div class="tech-badge-desc">voyage-3-lite embeddings</div>
+        </div>
+      </div>
+
+      <div class="tech-badge reveal" id="tech-pymongo">
+        <div class="tech-badge-icon" style="background:#00ED6422;">🔌</div>
+        <div>
+          <div class="tech-badge-name">PyMongo</div>
+          <div class="tech-badge-desc">MongoDB Python driver</div>
+        </div>
+      </div>
+
+      <div class="tech-badge reveal" id="tech-hf">
+        <div class="tech-badge-icon" style="background:#ffcc0022;">🤗</div>
+        <div>
+          <div class="tech-badge-name">HuggingFace</div>
+          <div class="tech-badge-desc">Dataset loading</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+
+      <!-- Brand column -->
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="text-decoration:none; display:inline-flex; margin-bottom:4px;">
+          <div class="nav-logo-icon">M</div>
+          <span class="nav-logo-text" style="font-size:1rem;">Mongo<span>Mind</span> AI</span>
+        </a>
+        <p>
+          An intelligent AI agent powered by MongoDB Atlas Vector Search,
+          LangGraph agentic workflows, and Groq LLM — built as a portfolio project
+          showcasing modern AI infrastructure.
+        </p>
+      </div>
+
+      <!-- Quick links -->
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#chat">Chat Interface</a></li>
+          <li><a href="#workflow">How It Works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#tech">Tech Stack</a></li>
+        </ul>
+      </div>
+
+      <!-- Tech links -->
+      <div class="footer-links">
+        <h4>Built With</h4>
+        <ul>
+          <li><a href="https://www.mongodb.com/atlas" target="_blank">MongoDB Atlas</a></li>
+          <li><a href="https://www.langchain.com" target="_blank">LangChain</a></li>
+          <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank">LangGraph</a></li>
+          <li><a href="https://console.groq.com" target="_blank">Groq</a></li>
+          <li><a href="https://www.voyageai.com" target="_blank">VoyageAI</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Footer bottom bar -->
+    <div class="footer-bottom">
+      <span>© 2025 MongoMind AI. Built with <span class="green">❤</span> for the AI community.</span>
+      <span>
+        Powered by
+        <span class="green">MongoDB Atlas</span> ·
+        <span class="green">LangGraph</span> ·
+        <span class="green">Groq</span>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast notification -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<!-- ─── SCRIPTS ──────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
